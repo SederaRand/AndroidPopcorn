@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">popcorn</string>
+    <string name="authentification">Sign in</string>
+    <string name="sign_up">Sign up</string>
+    <string name="user_name">User Name :</string>
+    <string name="email">Email :</string>
+    <string name="rpassword">Reenter your password :</string>
+    <string name="password">Password :</string>
+    <string name="btnConnect">Sign in</string>
+    <string name="btnSignUp">Sign up</string>
+    <string name="signupText">You do not have an account ?</string>
+    <string name="signupLink">Sign Up</string>
+
+    <string name="invalid_email">Please enter a valid email</string>
+    <string name="invalid_userName">Please enter a valid User Name</string>
+    <string name="email_not_found">Email not found</string>
+    <string name="invalid_pass">Please enter a valid password</string>
+    <string name="re_pass_fail">Please insert password verification</string>
+    <string name="pass_not_same">Passwords are not the same</string>
+    <string name="verify_email_pass">Check your email or password</string>
+    <string name="error_connect">No connection</string>
+    <string name="connected">You are connected</string>
+    <string name="succes_register">Your account has been created</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_settings">Settings</string>
+    <string name="title_notifications">Notifications</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
