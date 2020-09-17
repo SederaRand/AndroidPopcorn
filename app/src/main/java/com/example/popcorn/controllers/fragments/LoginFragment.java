@@ -126,7 +126,7 @@ public class LoginFragment extends Fragment {
         Intent homeIntent  = new Intent(getContext(), HomeActivity.class);
         homeIntent.putExtra("email", currentUser.getEmail());
         startActivity(homeIntent);
-        //azerty1234
+
     }
 
 

@@ -1,9 +1,19 @@
 package com.example.popcorn.controllers.fragments;
 
+import android.app.Activity;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -26,8 +36,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
 public class RegisterFragment extends Fragment {
@@ -38,8 +52,8 @@ public class RegisterFragment extends Fragment {
     private FirebaseDatabase database;
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
-    private static final String USER ="user";
-    private static final String TAG ="RegisterFragment";
+    private static final String USER = "user";
+    private static final String TAG = "RegisterFragment";
     private User user;
 
     public RegisterFragment() {
@@ -57,34 +71,50 @@ public class RegisterFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View result = inflater.inflate(R.layout.fragment_register, container, false);
 
-        mRegister_userName = (EditText)result.findViewById(R.id.register_userName);
-        mRegister_email = (EditText)result.findViewById(R.id.register_email);
+        mRegister_userName = (EditText) result.findViewById(R.id.register_userName);
+        mRegister_email = (EditText) result.findViewById(R.id.register_email);
         mRegister_pass = (EditText) result.findViewById(R.id.register_pass);
-        mBtnSignUp =(Button) result.findViewById(R.id.btn_submit);
+        mBtnSignUp = (Button) result.findViewById(R.id.btn_submit);
 
-        database= FirebaseDatabase.getInstance();
+        database = FirebaseDatabase.getInstance();
         mDatabase = database.getReference(USER);
         mAuth = FirebaseAuth.getInstance();
 
+        //notification
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    int id = (int) dataSnapshot.getChildrenCount();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        // send data
         mBtnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String email =  mRegister_email.getText().toString();
+                String email = mRegister_email.getText().toString();
                 String password = mRegister_pass.getText().toString();
-                if(TextUtils.isEmpty(email) || TextUtils.isEmpty(password)){
+                if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
                     Toast.makeText(getContext(), "Enter email or pass", Toast.LENGTH_LONG).show();
                     return;
                 }
                 String userName = mRegister_userName.getText().toString();
                 user = new User(email, password, userName);
-                registerUser(email,password);
+                registerUser(email, password);
+
             }
         });
 
         return result;
     }
 
-    public void registerUser(String email, String password){
+    public void registerUser(String email, String password) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
@@ -99,26 +129,50 @@ public class RegisterFragment extends Fragment {
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
                             Toast.makeText(getContext(), "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-
                         }
 
-                        // ...
                     }
                 });
     }
-    public void updateUI(FirebaseUser currentUser){
-        String keyId= mDatabase.push().getKey();
+
+    public void updateUI(FirebaseUser currentUser) {
+        String keyId = mDatabase.push().getKey();
         mDatabase.child(keyId).setValue(user);
 
-        FragmentManager fm = getFragmentManager();
-        assert fm != null;
-        FragmentTransaction ft = fm.beginTransaction();
+        FragmentManager fm_returnLogin = getFragmentManager();
+        assert fm_returnLogin != null;
+        FragmentTransaction ftransactionLogin = fm_returnLogin.beginTransaction();
         LoginFragment lf = new LoginFragment();
-        ft.replace(R.id.fragment_login, lf);
-        ft.commit();
-
-
+        ftransactionLogin.replace(R.id.fragment_login, lf);
+        ftransactionLogin.commit();
+        createNotificationChannel();
     }
 
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.channel_name);
+            String description = getString(R.string.channel_description);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel("n", name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = (NotificationManager) this.getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.createNotificationChannel(channel);
+        }
 
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext(), "n")
+                .setContentTitle(getString(R.string.notif_new_account))
+                .setSmallIcon(R.drawable.ic_notifications_black_24dp)
+                .setAutoCancel(true)
+                .setContentText(getString(R.string.succes_register));
+
+        Context a= this.getContext();
+        NotificationManagerCompat managerCompact = NotificationManagerCompat.from(a);
+        managerCompact.notify(999, builder.build());
+    }
 }
+
+

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.popcorn.controllers.activities.AuthActivity;
+import com.example.popcorn.controllers.activities.HomeActivity;
 
 public class MainActivity extends AppCompatActivity {
 
