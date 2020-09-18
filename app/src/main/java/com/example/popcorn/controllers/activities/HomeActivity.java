@@ -9,7 +9,7 @@ import android.view.MenuItem;
 
 import com.example.popcorn.R;
 import com.example.popcorn.controllers.fragments.HomeFragment;
-import com.example.popcorn.controllers.fragments.NotificationFragment;
+import com.example.popcorn.controllers.fragments.WatchFragment;
 import com.example.popcorn.controllers.fragments.SettingFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -37,7 +37,7 @@ public class HomeActivity extends AppCompatActivity {
                     selectFragment = new HomeFragment();
                     break;
                 case R.id.nav_notif:
-                    selectFragment = new NotificationFragment();
+                    selectFragment = new WatchFragment();
                     break;
                 case R.id.nav_setting:
                     selectFragment = new SettingFragment();

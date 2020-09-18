@@ -13,9 +13,9 @@
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.example.popcorn.controllers.fragments.NotificationFragment"
+        android:name="com.example.popcorn.controllers.fragments.WatchFragment"
         android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notification" />
+        tools:layout="@layout/fragment_watch" />
 
     <fragment
         android:id="@+id/navigation_notifications"

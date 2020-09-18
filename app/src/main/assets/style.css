@@ -1,0 +1,13 @@
+@charset "utf-8";
+
+.Main{
+    width:100%;
+    heigth:400px;
+
+}
+
+H3{
+    color: red;
+    text-align:center;
+    padding-top:10px
+}
