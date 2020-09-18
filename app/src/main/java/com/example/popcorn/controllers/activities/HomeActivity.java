@@ -41,10 +41,11 @@ public class HomeActivity extends AppCompatActivity {
                     break;
                 case R.id.nav_setting:
                     selectFragment = new SettingFragment();
+
                     break;
             }
 
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container ,
                     selectFragment).commit();
             return true;
         }

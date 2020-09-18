@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="@string/Newsletter">
+
+        <Preference
+            android:key="news"
+            android:title="@string/Suscribe_newsletter" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/general">
+
+        <SwitchPreference
+             android:key="switch_theme"
+             android:title="@string/theme"
+             android:summary="@string/mode_dark"
+        />
+
+        <MultiSelectListPreference
+            android:key="expandable"
+            android:title="@string/languages"
+            android:summary="@string/choice_languages"
+            android:entries="@array/languages_array"
+            android:entryValues="@array/languages_array"
+        />
+
+        </PreferenceCategory>
+
+        <PreferenceCategory
+            android:title="@string/switch_account">
+            <Preference
+                android:key="switch_account"
+                android:title="@string/disconnection" />
+
+        </PreferenceCategory>
+
+    </PreferenceScreen>

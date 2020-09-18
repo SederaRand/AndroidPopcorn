@@ -23,8 +23,8 @@ public class MainActivity extends AppCompatActivity {
                 } catch (InterruptedException ie) {
                     ie.printStackTrace();
                 } finally {
-                    Intent openMainActivity = new Intent(getApplicationContext(), AuthActivity.class);
-                    startActivity(openMainActivity );
+                    Intent openMainActivity = new Intent(getApplicationContext(), HomeActivity.class);
+                    startActivity(openMainActivity);
 
                 }
             }
