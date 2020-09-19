@@ -28,6 +28,7 @@ public class HomeFragment extends Fragment {
     private DatabaseReference mDatabase;
 
 
+
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -45,11 +46,9 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         View result =  inflater.inflate(R.layout.fragment_home, container, false);
 
-
         mBlogList = (RecyclerView)result.findViewById(R.id.blog_list);
         mBlogList.setHasFixedSize(true);
         mBlogList.setLayoutManager(new LinearLayoutManager(getContext()));
-
 
         return result;
     }
@@ -63,7 +62,6 @@ public class HomeFragment extends Fragment {
                 R.layout.blog_row,
                 BlogViewHolder.class,
                 mDatabase
-
         ) {
 
             @Override
@@ -79,12 +77,10 @@ public class HomeFragment extends Fragment {
     }
 
     public static class BlogViewHolder extends RecyclerView.ViewHolder{
-
         View mView;
 
         public BlogViewHolder(@NonNull View itemView) {
             super(itemView);
-
             mView = itemView;
         }
 

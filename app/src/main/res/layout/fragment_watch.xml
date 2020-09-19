@@ -3,13 +3,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".controllers.fragments.WatchFragment">
+    tools:context=".controllers.fragments.WatchFragment"
+    android:orientation="horizontal">
 
     <WebView
         android:id="@+id/html_res"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
     </WebView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="50dp"
+        android:id="@+id/video_list">
+
+    </androidx.recyclerview.widget.RecyclerView>
 
 
 </RelativeLayout>
