@@ -1,104 +1,113 @@
 package com.example.popcorn.controllers.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.example.popcorn.R;
+import com.example.popcorn.controllers.adapter.MyAdapter;
 import com.example.popcorn.models.Content;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.squareup.picasso.Picasso;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 
 public class HomeFragment extends Fragment {
 
-    private RecyclerView mBlogList;
-    private DatabaseReference mDatabase;
-
+    private RecyclerView recyclerView;
+    private DatabaseReference ref;
+    private SearchView searchView;
+    ArrayList<Content>list ;
+    private MyAdapter myAdapter;
 
 
     public HomeFragment() {
         // Required empty public constructor
     }
 
-
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("content");
+        ref = FirebaseDatabase.getInstance().getReference("content");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View result =  inflater.inflate(R.layout.fragment_home, container, false);
+        recyclerView = result.findViewById(R.id.blog_list);
+        searchView = result.findViewById(R.id.edit_search);
+        list = new ArrayList<Content>();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchView.clearFocus();
+                if (!TextUtils.isEmpty(query)) {
+                    myAdapter.filter(query);
+                }
+                return false;
+            }
 
-        mBlogList = (RecyclerView)result.findViewById(R.id.blog_list);
-        mBlogList.setHasFixedSize(true);
-        mBlogList.setLayoutManager(new LinearLayoutManager(getContext()));
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                myAdapter.filter(newText);
+                return false;
+            }
+        });
+        Log.d("image", "null");
+
+        fetch();
 
         return result;
+
+
     }
 
     @Override
     public void onStart() {
         super.onStart();
+   
+    }
+    private void fetch(){
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                list.clear();
 
-        FirebaseRecyclerAdapter<Content,BlogViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Content, BlogViewHolder>(
-                Content.class,
-                R.layout.blog_row,
-                BlogViewHolder.class,
-                mDatabase
-        ) {
+                for (DataSnapshot ds : snapshot.getChildren()){
+
+                    Content content = ds.getValue(Content.class);
+                    list.add(new Content(content.getTitle(), content.getDetails(),content.getImage()));
+
+                }
+                Log.d("SSSSSSSS", String.valueOf(list.size()));
+                myAdapter = new MyAdapter(list,getContext());
+                recyclerView.setAdapter(myAdapter);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            }
 
             @Override
-            protected void populateViewHolder(BlogViewHolder viewHolder, Content model, int i) {
-                viewHolder.setTitle(model.getTitle());
-                viewHolder.setDetails(model.getDetails());
-                viewHolder.setImage(getContext(), model.getImage());
+            public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        };
-        mBlogList.setAdapter(firebaseRecyclerAdapter);
-
+        });
     }
 
-    public static class BlogViewHolder extends RecyclerView.ViewHolder{
-        View mView;
-
-        public BlogViewHolder(@NonNull View itemView) {
-            super(itemView);
-            mView = itemView;
-        }
-
-        public void setTitle(String title){
-
-            TextView post_title = (TextView)mView.findViewById(R.id.post_title);
-            post_title.setText(title);
-        }
-
-        public void setDetails(String details){
-            TextView post_details = (TextView)mView.findViewById(R.id.post_details);
-            post_details.setText(details);
-        }
-
-        public void setImage(Context ctx, String image){
-            ImageView post_image = (ImageView) mView.findViewById(R.id.post_image);
-            Picasso.with(ctx).load(image).into(post_image);
-
-        }
-    }
 }

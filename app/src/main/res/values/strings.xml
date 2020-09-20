@@ -20,6 +20,7 @@
     <string name="verify_email_pass">Check your email or password</string>
     <string name="error_connect">No connection</string>
     <string name="connected">You are connected</string>
+    <string name="dic_connected">You are disconnected</string>
     <string name="succes_register">Your account has been created</string>
     <string name="title_activity_home">HomeActivity</string>
     <string name="title_home">Home</string>
@@ -53,5 +54,6 @@
     </string-array>
 
     <string name="progressD">Buffering Please Wait</string>
+
 
 </resources>
