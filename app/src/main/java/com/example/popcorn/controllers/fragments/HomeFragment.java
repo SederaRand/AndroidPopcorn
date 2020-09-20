@@ -83,7 +83,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-   
+
     }
     private void fetch(){
         ref.addValueEventListener(new ValueEventListener() {
