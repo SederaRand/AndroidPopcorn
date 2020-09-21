@@ -44,6 +44,7 @@ public class LoginFragment extends Fragment {
     }
 
     public static void logout() {
+
         mAuth.signOut();
     }
 
