@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,14 +37,17 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         View view = LayoutInflater.from(ctx).inflate(R.layout.blog_row, viewGroup, false);
+
         return new MyViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+
         holder.title.setText(list.get(position).getTitle());
         holder.details.setText(list.get(position).getDetails());
         Picasso.with(ctx).load(list.get(position).getImage()).into(holder.image);
+        final long key = getItemId(position);
 
         Log.d("title", list.get(position).getTitle());
         Log.d("details", list.get(position).getDetails());
@@ -60,6 +64,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         ImageView image;
         public MyViewHolder(View itemView){
             super(itemView);
+
             title = (TextView)itemView.findViewById(R.id.post_title);
             details = (TextView)itemView.findViewById(R.id.post_details);
             image = (ImageView) itemView.findViewById(R.id.post_image);

@@ -11,8 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -38,6 +36,7 @@ public class HomeFragment extends Fragment {
     private MyAdapter myAdapter;
 
 
+
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -46,6 +45,8 @@ public class HomeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ref = FirebaseDatabase.getInstance().getReference("content");
+
+
     }
 
     @Override
@@ -55,6 +56,7 @@ public class HomeFragment extends Fragment {
         recyclerView = result.findViewById(R.id.blog_list);
         searchView = result.findViewById(R.id.edit_search);
         list = new ArrayList<Content>();
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -71,12 +73,9 @@ public class HomeFragment extends Fragment {
                 return false;
             }
         });
-        Log.d("image", "null");
-
         fetch();
 
-        return result;
-
+    return result;
 
     }
 
@@ -85,6 +84,7 @@ public class HomeFragment extends Fragment {
         super.onStart();
 
     }
+
     private void fetch(){
         ref.addValueEventListener(new ValueEventListener() {
             @Override
@@ -97,7 +97,6 @@ public class HomeFragment extends Fragment {
                     list.add(new Content(content.getTitle(), content.getDetails(),content.getImage()));
 
                 }
-                Log.d("SSSSSSSS", String.valueOf(list.size()));
                 myAdapter = new MyAdapter(list,getContext());
                 recyclerView.setAdapter(myAdapter);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

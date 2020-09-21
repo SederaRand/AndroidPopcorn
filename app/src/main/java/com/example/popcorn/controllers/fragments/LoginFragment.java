@@ -1,9 +1,15 @@
 package com.example.popcorn.controllers.fragments;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -15,11 +21,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.popcorn.R;
-import com.example.popcorn.controllers.activities.AuthActivity;
 import com.example.popcorn.controllers.activities.HomeActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -32,12 +36,15 @@ public class LoginFragment extends Fragment {
     private EditText mLogin_email, mLogin_password;
     private Button mBtnSignin, mbtnSubmitIntent;
 
-
-    private FirebaseAuth mAuth;
+    private static FirebaseAuth mAuth;
     private static final String TAG ="LoginFragment";
 
     public LoginFragment() {
 
+    }
+
+    public static void logout() {
+        mAuth.signOut();
     }
 
 
@@ -60,12 +67,14 @@ public class LoginFragment extends Fragment {
         mbtnSubmitIntent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 FragmentManager fm = getFragmentManager();
                 assert fm != null;
                 FragmentTransaction ft = fm.beginTransaction();
                 RegisterFragment llf = new RegisterFragment();
                 ft.replace(R.id.fragment_login, llf);
                 ft.commit();
+
             }
         });
         // Initialize Firebase Auth
@@ -90,18 +99,13 @@ public class LoginFragment extends Fragment {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
                                     // Sign in success, update UI with the signed-in user's information
-                                    Log.d(TAG, "signInWithEmail:success");
                                     FirebaseUser user = mAuth.getCurrentUser();
                                     updateUI(user);
+                                    createNotificationChannel();
                                 } else {
-                                    // If sign in fails, display a message to the user.
-                                    Log.w(TAG, "signInWithEmail:failure", task.getException());
-                                    Toast.makeText(getContext(), "Authentication failed.",
+                                    Toast.makeText(getContext(), R.string.invalid,
                                             Toast.LENGTH_SHORT).show();
-                                    updateUI(null);
-                                }
-
-                                // ...
+                                    }
                             }
                         });
             }
@@ -121,12 +125,34 @@ public class LoginFragment extends Fragment {
         }
 
     }
-
     public void updateUI(FirebaseUser currentUser){
         Intent homeIntent  = new Intent(getContext(), HomeActivity.class);
         homeIntent.putExtra("email", currentUser.getEmail());
         startActivity(homeIntent);
+    }
 
+    public void createNotificationChannel() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.channel_name);
+            String description = getString(R.string.channel_description);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel("n", name, importance);
+            channel.setDescription(description);
+
+            NotificationManager notificationManager = (NotificationManager) this.getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext(), "n")
+                .setContentTitle(getString(R.string.notif_login_account))
+                .setSmallIcon(R.drawable.ic_notifications_black_24dp)
+                .setAutoCancel(true)
+                .setContentText(getString(R.string.succes_login));
+
+        Context a= this.getContext();
+        NotificationManagerCompat managerCompact = NotificationManagerCompat.from(a);
+        managerCompact.notify(999, builder.build());
     }
 
 

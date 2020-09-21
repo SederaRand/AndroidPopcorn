@@ -11,24 +11,6 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:title="@string/general">
-
-        <SwitchPreference
-             android:key="switch_theme"
-             android:title="@string/theme"
-             android:summary="@string/mode_dark"
-        />
-
-        <MultiSelectListPreference
-            android:key="expandable"
-            android:title="@string/languages"
-            android:summary="@string/choice_languages"
-            android:entries="@array/languages_array"
-            android:entryValues="@array/languages_array"
-        />
-
-        </PreferenceCategory>
 
         <PreferenceCategory
             android:title="@string/switch_account">
